@@ -13,7 +13,7 @@ const AddProduct = () => {
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState([]);
   const [isActive, setIsActive] = useState(true);
-
+  const [imageFile, setImageFile] = useState(null); // State to handle image
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -50,22 +50,59 @@ const AddProduct = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
     if (validateForm()) {
       try {
-        await axios.post('http://localhost:5153/api/products', { 
-          vendorId: "TEST", 
-          name, 
-          description, 
-          price, 
-          categoryId: category, 
-          isActive 
+        const productResponse = await axios.post('http://localhost:5153/api/products', {
+          name,
+          description,
+          price,
+          categoryId: category,
+          isActive,
         });
+  
+        const productId = productResponse.data.id;
+  
+        let uploadedImagePath = '';
+        if (imageFile) {
+          const imageFormData = new FormData();
+          imageFormData.append('productId', productId);
+          imageFormData.append('imageFile', imageFile);
+  
+          const uploadResponse = await axios.post('http://localhost:5153/api/products/upload-image', imageFormData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+  
+          if (uploadResponse.data && uploadResponse.data.imagePath) {
+            uploadedImagePath = uploadResponse.data.imagePath;
+          } else {
+            console.error('Image upload failed:', uploadResponse.data);
+            return;
+          }
+        }
+  
+        await axios.put(`http://localhost:5153/api/products/${productId}`, {
+          name,
+          description,
+          price,
+          categoryId: category,
+          isActive,
+          imagePath: uploadedImagePath, 
+        });
+  
+        console.log('Navigation to /product/view-product');
         navigate('/product/view-product');
+  
       } catch (error) {
         console.error('Error adding product:', error);
+        navigate('/product/view-product');
+        // Optionally show a message to the user
       }
     }
   };
+  
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -140,6 +177,15 @@ const AddProduct = () => {
             <Form.Control.Feedback type="invalid">
               {errors.category}
             </Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formProductImage">
+            <Form.Label>Product Image</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files[0])}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" id="formProductStatus">

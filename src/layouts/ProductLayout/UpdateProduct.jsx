@@ -14,7 +14,8 @@ const UpdateProduct = () => {
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState([]);
   const [isActive, setIsActive] = useState(true);
-  const [errors, setErrors] = useState({});  // State to track validation errors
+  const [imageFile, setImageFile] = useState(null); 
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +69,23 @@ const UpdateProduct = () => {
     
     if (validateForm()) {
       try {
+        let uploadedImagePath = '';
+        if (imageFile) {
+          const imageFormData = new FormData();
+          imageFormData.append('productId', id); // Use the current product ID
+          imageFormData.append('imageFile', imageFile);
+
+          const uploadResponse = await axios.post('http://localhost:5153/api/products/upload-image', imageFormData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          if (uploadResponse.data && uploadResponse.data.imagePath) {
+            uploadedImagePath = uploadResponse.data.imagePath;
+          }
+        }
+
         await axios.put(`http://localhost:5153/api/products/${id}`, {
           Id: id,
           vendorId: "TEST",  // TODO: Add real-time vendor logic
@@ -75,8 +93,10 @@ const UpdateProduct = () => {
           description,
           price,
           categoryId: category,
-          isActive
+          isActive,
+          imagePath: uploadedImagePath || ''
         });
+
         navigate('/product/view-product');
       } catch (error) {
         console.error('Error updating product:', error);
@@ -97,7 +117,7 @@ const UpdateProduct = () => {
                 placeholder="Enter product name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                isInvalid={!!errors.name}  // Trigger validation feedback
+                isInvalid={!!errors.name}
                 required
               />
               <Form.Control.Feedback type="invalid">
@@ -113,7 +133,7 @@ const UpdateProduct = () => {
                 placeholder="Enter product price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                isInvalid={!!errors.price}  // Trigger validation feedback
+                isInvalid={!!errors.price}
                 required
               />
               <Form.Control.Feedback type="invalid">
@@ -130,7 +150,7 @@ const UpdateProduct = () => {
               placeholder="Enter product description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              isInvalid={!!errors.description}  // Trigger validation feedback
+              isInvalid={!!errors.description}
               required
             />
             <Form.Control.Feedback type="invalid">
@@ -144,7 +164,7 @@ const UpdateProduct = () => {
               as="select"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              isInvalid={!!errors.category}  // Trigger validation feedback
+              isInvalid={!!errors.category}
               required
             >
               <option value="">Select a category</option>
@@ -157,6 +177,15 @@ const UpdateProduct = () => {
             <Form.Control.Feedback type="invalid">
               {errors.category}
             </Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formProductImage">
+            <Form.Label>Product Image</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files[0])}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" id="formProductStatus">

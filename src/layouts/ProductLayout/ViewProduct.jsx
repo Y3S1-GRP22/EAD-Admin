@@ -35,35 +35,28 @@ const ViewProducts = () => {
     fetchCategories();
   }, []);
 
-  // Filter products based on the selected filters
   const filteredProducts = products.filter(product => {
     const isCategoryMatch = selectedCategory === 'all' || product.categoryId === selectedCategory;
     const isStatusMatch = statusFilter === 'all' || (statusFilter === 'active' && product.isActive) || (statusFilter === 'inactive' && !product.isActive);
-    //TODO: filter by vendor 
-    //const isVendorMatch = product.vendorId === 'TEST'; 
     return isCategoryMatch && isStatusMatch;
   });
 
-  // Handler for Edit button
   const handleEdit = (id) => {
     navigate(`/product/update-product/${id}`);
   };
 
-  // Handler for Delete button
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Are you sure you want to delete this product?');
-    if (!confirmed) return; // Exit if the user cancels
+    if (!confirmed) return;
 
     try {
       await axios.delete(`http://localhost:5153/api/products/${id}`);
-      // Refresh the product list after deletion
       setProducts(products.filter(product => product.id !== id));
     } catch (error) {
       console.error('Error deleting product:', error);
     }
   };
 
-  // Handler for Toggle Active/Inactive
   const handleToggleActive = async (id, isActive) => {
     try {
       if (isActive) {
@@ -71,7 +64,6 @@ const ViewProducts = () => {
       } else {
         await axios.put(`http://localhost:5153/api/products/activate/${id}`);
       }
-      // Refresh the product list after toggling status
       const updatedProducts = products.map(product =>
         product.id === id ? { ...product, isActive: !isActive } : product
       );
@@ -88,54 +80,53 @@ const ViewProducts = () => {
       <div className="d-flex flex-column align-items-end mb-3">
         <Button
           variant="outline-primary"
-          onClick={() => navigate('/product/add-product')} // Navigate to add product page
+          onClick={() => navigate('/product/add-product')}
         >
           Add Product
         </Button>
       </div>
 
-      
       <Table striped bordered hover>
         <thead>
-        <tr>
-            <td colSpan="7" className="text-center">
-            <div className="mt-6">
-              <Button
-                variant={statusFilter === 'all' ? 'outline-info' : 'outline-primary'}
-                onClick={() => setStatusFilter('all')}
-              >
-                All Status
-              </Button>
-              <Button
-                variant={statusFilter === 'active' ? 'outline-info' : 'outline-primary'}
-                className="ml-2"
-                onClick={() => setStatusFilter('active')}
-              >
-                Active
-              </Button>
-              <Button
-                variant={statusFilter === 'inactive' ? 'outline-info' : 'outline-primary'}
-                className="ml-2"
-                onClick={() => setStatusFilter('inactive')}
-              >
-                Inactive
-              </Button>
-
-              <Form.Group className="mt-3">
-                <Form.Label>Filter by Category</Form.Label>
-                <Form.Select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+          <tr>
+            <td colSpan="8" className="text-center">
+              <div className="mt-6">
+                <Button
+                  variant={statusFilter === 'all' ? 'outline-info' : 'outline-primary'}
+                  onClick={() => setStatusFilter('all')}
                 >
-                  <option value="all">All Categories</option>
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </div>
+                  All Status
+                </Button>
+                <Button
+                  variant={statusFilter === 'active' ? 'outline-info' : 'outline-primary'}
+                  className="ml-2"
+                  onClick={() => setStatusFilter('active')}
+                >
+                  Active
+                </Button>
+                <Button
+                  variant={statusFilter === 'inactive' ? 'outline-info' : 'outline-primary'}
+                  className="ml-2"
+                  onClick={() => setStatusFilter('inactive')}
+                >
+                  Inactive
+                </Button>
+
+                <Form.Group className="mt-3">
+                  <Form.Label>Filter by Category</Form.Label>
+                  <Form.Select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  >
+                    <option value="all">All Categories</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </div>
             </td>
           </tr>
           <tr>
@@ -143,14 +134,14 @@ const ViewProducts = () => {
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
-            <th>Category Status</th> {/* New Column */}
+            <th>Category Status</th>
             <th>Status</th>
+            <th>Image</th> {/* New Column */}
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredProducts.map((product, index) => {
-            // Find the category for the current product
             const category = categories.find(cat => cat.id === product.categoryId);
 
             return (
@@ -171,6 +162,17 @@ const ViewProducts = () => {
                   >
                     {product.isActive ? 'Deactivate' : 'Activate'}
                   </Button>
+                </td>
+                <td>
+                  {product.imagePath ? (
+                    <img
+                      src={`http://localhost:5153${product.imagePath}`} // Adjust URL if necessary
+                      alt={product.name}
+                      style={{ width: '100px', height: 'auto' }}
+                    />
+                  ) : (
+                    'No Image'
+                  )}
                 </td>
                 <td>
                   <Button
