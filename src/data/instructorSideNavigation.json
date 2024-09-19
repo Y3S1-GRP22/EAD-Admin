@@ -1,0 +1,47 @@
+{
+    "data": [
+        {
+            "name": "Dashboard",
+            "icon": [
+                "fas",
+                "chart-line"
+            ],
+            "link": "/admin",
+            "subMenu": []
+        },
+        {
+            "name": "Category Management",
+            "icon": [
+                "fas",
+                "book-open"
+            ],
+            "link": "/category/view-category",
+            "subMenu": []
+        },
+        {
+            "name": "Enrollment Management",
+            "icon": [
+                "fas",
+                "user-graduate"
+            ],
+            "subMenu": [
+                {
+                    "name": "View Category Enrollment",
+                    "icon": [
+                        "fas",
+                        "book-open"
+                    ],
+                    "link": "/enrollment/view-category-enrollment"
+                },
+                {
+                    "name": "View Student Enrollment",
+                    "icon": [
+                        "fas",
+                        "graduation-cap"
+                    ],
+                    "link": "/enrollment/view-student-enrollment"
+                }
+            ]
+        }
+    ]
+}

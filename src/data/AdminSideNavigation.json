@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "name": "Dashboard",
+      "icon": ["fas", "chart-line"],
+      "link": "/admin",
+      "subMenu": []
+    },
+    {
+      "name": "User Management",
+      "icon": ["fas", "users"],
+      "subMenu": [
+        {
+          "name": "View Registered Students",
+          "icon": ["fas", "user-graduate"],
+          "link": "/view-students"
+        },
+        {
+          "name": "View Admins",
+          "icon": ["fas", "user-shield"],
+          "link": "/view-admins"
+        },
+        {
+          "name": "View Instructors",
+          "icon": ["fas", "user-tie"],
+          "link": "/view-instructors"
+        }
+      ]
+    },
+    {
+      "name": "Category Management",
+      "icon": ["fas", "book-open"],
+      "link": "/category/view-category",
+      "subMenu": []
+    },
+    {
+      "name": "Product Management",
+      "icon": ["fas", "book-open"],
+      "link": "/product/view-product",
+      "subMenu": []
+    },
+    {
+      "name": "Inventory Management",
+      "icon": ["fas", "user-graduate"],
+      "link": "/inventory/view-inventory"
+    },
+    {
+      "name": "Payment Management",
+      "icon": ["fas", "wallet"],
+      "link": "/payment/view-payment",
+      "subMenu": []
+    }
+  ]
+}
