@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import './Product.css'; // Import custom CSS file if needed
 
 const AddProduct = () => {
   const [name, setName] = useState('');
@@ -14,6 +13,8 @@ const AddProduct = () => {
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState([]);
   const [isActive, setIsActive] = useState(true);
+
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,14 +30,40 @@ const AddProduct = () => {
     fetchCategories();
   }, []);
 
+  const validateForm = () => {
+    let formErrors = {};
+    if (name.length < 3) {
+      formErrors.name = "Product name must be at least 3 characters long";
+    }
+    if (price <= 0) {
+      formErrors.price = "Price must be a positive number";
+    }
+    if (!category) {
+      formErrors.category = "Please select a category";
+    }
+    if (description.length < 10) {
+      formErrors.description = "Description must be at least 10 characters long";
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      await axios.post('http://localhost:5153/api/products', { name, description, price, categoryId:category, isActive });
-      navigate('/product/view-product');
-    } catch (error) {
-      console.error('Error adding product:', error);
+    if (validateForm()) {
+      try {
+        await axios.post('http://localhost:5153/api/products', { 
+          vendorId: "TEST", 
+          name, 
+          description, 
+          price, 
+          categoryId: category, 
+          isActive 
+        });
+        navigate('/product/view-product');
+      } catch (error) {
+        console.error('Error adding product:', error);
+      }
     }
   };
 
@@ -53,8 +80,12 @@ const AddProduct = () => {
                 placeholder="Enter product name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                isInvalid={!!errors.name}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.name}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Col} controlId="formProductPrice">
@@ -65,8 +96,12 @@ const AddProduct = () => {
                 placeholder="Enter product price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
+                isInvalid={!!errors.price}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.price}
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
 
@@ -78,8 +113,12 @@ const AddProduct = () => {
               placeholder="Enter product description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              isInvalid={!!errors.description}
               required
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.description}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formProductCategory">
@@ -88,6 +127,7 @@ const AddProduct = () => {
               as="select"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              isInvalid={!!errors.category}
               required
             >
               <option value="">Select a category</option>
@@ -97,6 +137,9 @@ const AddProduct = () => {
                 </option>
               ))}
             </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {errors.category}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3" id="formProductStatus">

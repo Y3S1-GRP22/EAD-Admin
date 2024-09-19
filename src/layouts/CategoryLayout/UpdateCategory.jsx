@@ -3,12 +3,13 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
-import './Category.css'; // Import custom CSS file if needed
+import './Category.css'; // Custom CSS if needed
 
 const UpdateCategory = () => {
-  const { id } = useParams(); // Get the category ID from URL params
+  const { id } = useParams(); 
   const [name, setName] = useState(''); 
   const [isActive, setIsActive] = useState(true); 
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,8 +26,30 @@ const UpdateCategory = () => {
     fetchCategory();
   }, [id]);
 
+  // Validation function
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate category name
+    if (!name) {
+      newErrors.name = "Category name is required.";
+    } else if (name.length < 3) {
+      newErrors.name = "Category name must be at least 3 characters long.";
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+      newErrors.name = "Category name can only contain letters, numbers, and spaces.";
+    }
+
+    return newErrors;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     try {
       await axios.put(`http://localhost:5153/api/category/${id}`, { name, isActive });
@@ -47,9 +70,16 @@ const UpdateCategory = () => {
               type="text"
               placeholder="Enter category name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setErrors({ ...errors, name: '' }); // Clear error on change
+              }}
+              isInvalid={!!errors.name} // Add invalid style if there's an error
               required
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.name}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formCategoryStatus">

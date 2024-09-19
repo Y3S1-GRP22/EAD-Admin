@@ -39,7 +39,8 @@ const ViewProducts = () => {
   const filteredProducts = products.filter(product => {
     const isCategoryMatch = selectedCategory === 'all' || product.categoryId === selectedCategory;
     const isStatusMatch = statusFilter === 'all' || (statusFilter === 'active' && product.isActive) || (statusFilter === 'inactive' && !product.isActive);
-
+    //TODO: filter by vendor 
+    //const isVendorMatch = product.vendorId === 'TEST'; 
     return isCategoryMatch && isStatusMatch;
   });
 

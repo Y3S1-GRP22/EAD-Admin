@@ -5,16 +5,16 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
-import './Product.css'; // Import custom CSS file if needed
 
 const UpdateProduct = () => {
-  const { id } = useParams(); // Get the product ID from URL params
+  const { id } = useParams();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState([]);
   const [isActive, setIsActive] = useState(true);
+  const [errors, setErrors] = useState({});  // State to track validation errors
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,21 +45,42 @@ const UpdateProduct = () => {
     fetchProduct();
   }, [id]);
 
+  const validateForm = () => {
+    const formErrors = {};
+    if (name.length < 3) {
+      formErrors.name = "Product name must be at least 3 characters long";
+    }
+    if (price <= 0) {
+      formErrors.price = "Price must be a positive number";
+    }
+    if (!category) {
+      formErrors.category = "Please select a category";
+    }
+    if (description.length < 10) {
+      formErrors.description = "Description must be at least 10 characters long";
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      await axios.put(`http://localhost:5153/api/products/${id}`, {
-        Id: id,
-        name,
-        description,
-        price,
-        categoryId: category,
-        isActive
-      });
-      navigate('/product/view-product');
-    } catch (error) {
-      console.error('Error updating product:', error);
+    
+    if (validateForm()) {
+      try {
+        await axios.put(`http://localhost:5153/api/products/${id}`, {
+          Id: id,
+          vendorId: "TEST",  // TODO: Add real-time vendor logic
+          name,
+          description,
+          price,
+          categoryId: category,
+          isActive
+        });
+        navigate('/product/view-product');
+      } catch (error) {
+        console.error('Error updating product:', error);
+      }
     }
   };
 
@@ -76,8 +97,12 @@ const UpdateProduct = () => {
                 placeholder="Enter product name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                isInvalid={!!errors.name}  // Trigger validation feedback
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.name}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Col} controlId="formProductPrice">
@@ -88,8 +113,12 @@ const UpdateProduct = () => {
                 placeholder="Enter product price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
+                isInvalid={!!errors.price}  // Trigger validation feedback
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.price}
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
 
@@ -101,8 +130,12 @@ const UpdateProduct = () => {
               placeholder="Enter product description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              isInvalid={!!errors.description}  // Trigger validation feedback
               required
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.description}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formProductCategory">
@@ -111,6 +144,7 @@ const UpdateProduct = () => {
               as="select"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              isInvalid={!!errors.category}  // Trigger validation feedback
               required
             >
               <option value="">Select a category</option>
@@ -120,6 +154,9 @@ const UpdateProduct = () => {
                 </option>
               ))}
             </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {errors.category}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3" id="formProductStatus">

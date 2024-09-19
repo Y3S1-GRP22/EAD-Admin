@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
-import './Category.css'; // Import custom CSS file if needed
 
 const UpdateCategory = () => {
   const { id } = useParams(); // Get the category ID from URL params

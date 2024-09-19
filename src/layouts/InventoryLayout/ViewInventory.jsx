@@ -11,12 +11,13 @@ const ViewInventory = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCategoryStatus, setSelectedCategoryStatus] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all'); // Product status filter
+  const [statusFilter, setStatusFilter] = useState('all');
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [updateQuantity, setUpdateQuantity] = useState('');
   const [removeQuantity, setRemoveQuantity] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,13 +45,44 @@ const ViewInventory = () => {
 
   const filteredProducts = products.filter(product => {
     const isCategoryMatch = selectedCategory === 'all' || product.categoryId === selectedCategory;
-    const isCategoryStatusMatch = selectedCategoryStatus === 'all' || (selectedCategoryStatus === 'active' && product.categoryStatus) || (selectedCategoryStatus === 'inactive' && !product.categoryStatus);
-    const isStatusMatch = statusFilter === 'all' || (statusFilter === 'inStock' && product.stock > 0) || (statusFilter === 'outOfStock' && product.stock <= 0) || (statusFilter === 'active' && product.isActive) || (statusFilter === 'inactive' && !product.isActive);
+    const isCategoryStatusMatch = selectedCategoryStatus === 'all' || 
+      (selectedCategoryStatus === 'active' && product.categoryStatus) || 
+      (selectedCategoryStatus === 'inactive' && !product.categoryStatus);
+    const isStatusMatch = statusFilter === 'all' || 
+      (statusFilter === 'inStock' && product.stock > 0) || 
+      (statusFilter === 'outOfStock' && product.stock <= 0) || 
+      (statusFilter === 'active' && product.isActive) || 
+      (statusFilter === 'inactive' && !product.isActive);
 
     return isCategoryMatch && isCategoryStatusMatch && isStatusMatch;
   });
 
+  // Validation for stock update and removal
+  const validateUpdateQuantity = () => {
+    const newErrors = {};
+    if (updateQuantity <= 0) {
+      newErrors.updateQuantity = "Quantity must be a positive number.";
+    }
+    return newErrors;
+  };
+
+  const validateRemoveQuantity = () => {
+    const newErrors = {};
+    if (removeQuantity <= 0) {
+      newErrors.removeQuantity = "Quantity must be a positive number.";
+    } else if (removeQuantity > currentProduct.stockQuantity) {
+      newErrors.removeQuantity = "Quantity to remove cannot exceed available stock.";
+    }
+    return newErrors;
+  };
+
   const handleUpdateStock = async () => {
+    const validationErrors = validateUpdateQuantity();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
     if (currentProduct) {
       try {
         await axios.put(`http://localhost:5153/api/inventory/update-stock/${currentProduct.id}`, { stock: parseInt(updateQuantity) });
@@ -59,6 +91,7 @@ const ViewInventory = () => {
         setUpdateQuantity('');
         const response = await axios.get('http://localhost:5153/api/products');
         setProducts(response.data);
+        setErrors({});
       } catch (error) {
         console.error('Error updating stock:', error);
       }
@@ -66,6 +99,12 @@ const ViewInventory = () => {
   };
 
   const handleRemoveStock = async () => {
+    const validationErrors = validateRemoveQuantity();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     if (currentProduct) {
       try {
         await axios.put(`http://localhost:5153/api/inventory/remove-stock/${currentProduct.id}`, { stock: parseInt(removeQuantity) });
@@ -74,6 +113,7 @@ const ViewInventory = () => {
         setRemoveQuantity('');
         const response = await axios.get('http://localhost:5153/api/products');
         setProducts(response.data);
+        setErrors({});
       } catch (error) {
         console.error('Error removing stock:', error);
       }
@@ -103,8 +143,8 @@ const ViewInventory = () => {
         </Button>
       </div> */}
 
-      <div className="row mb-4">
-        {/* <div className="col-md-4">
+       {/*<div className="row mb-4">
+        <div className="col-md-4">
           <Button
             variant={statusFilter === 'all' ? 'outline-info' : 'outline-primary'}
             onClick={() => setStatusFilter('all')}
@@ -169,8 +209,8 @@ const ViewInventory = () => {
               <option value="inactive">Inactive Categories</option>
             </Form.Select>
           </Form.Group>
-        </div>*/}
-      </div> 
+        </div>
+      </div> */}
 
       <Table striped bordered hover>
         <thead>
@@ -234,8 +274,12 @@ const ViewInventory = () => {
                 type="number"
                 value={updateQuantity}
                 onChange={(e) => setUpdateQuantity(e.target.value)}
+                isInvalid={!!errors.updateQuantity}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.updateQuantity}
+              </Form.Control.Feedback>
             </Form.Group>
             <Button variant="outline-primary" type="submit" className="mt-2">
               Update Stock
@@ -257,8 +301,12 @@ const ViewInventory = () => {
                 type="number"
                 value={removeQuantity}
                 onChange={(e) => setRemoveQuantity(e.target.value)}
+                isInvalid={!!errors.removeQuantity}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.removeQuantity}
+              </Form.Control.Feedback>
             </Form.Group>
             <Button variant="outline-danger" type="submit" className="mt-2">
               Remove Stock

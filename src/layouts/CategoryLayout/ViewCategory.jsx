@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 
 const ViewCategory = () => {
   const [categories, setCategories] = useState([]);

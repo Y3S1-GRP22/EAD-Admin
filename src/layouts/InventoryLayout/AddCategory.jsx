@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import './Category.css'; // Import custom CSS file if needed
 
 const AddCategory = () => {
   const [name, setName] = useState(''); 
