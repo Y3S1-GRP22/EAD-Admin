@@ -233,7 +233,7 @@ const ViewInventory = () => {
               <tr key={product.id}>
                 <td>{index + 1}</td>
                 <td>{product.name}</td>
-                <td>{product.description}</td>
+                <td style={{ width: '250px' }}>{product.description}</td>
                 <td>${product.price.toFixed(2)}</td>
                 <td>{category ? category.name : 'Unknown'}</td>
                 <td>{category ? (category.isActive ? 'Active' : 'Inactive') : 'Unknown'}</td>
