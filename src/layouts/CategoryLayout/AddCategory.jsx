@@ -1,26 +1,27 @@
-import React, { useState } from "react";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import './Category.css'; // Import custom CSS file if needed
+import "./Category.css"; // Import custom CSS file if needed
 
 const AddCategory = () => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Category Name Validation
     if (!name) {
       newErrors.name = "Category name is required.";
     } else if (name.length < 3) {
       newErrors.name = "Category name must be at least 3 characters long.";
     } else if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
-      newErrors.name = "Category name can only contain letters, numbers, and spaces.";
+      newErrors.name =
+        "Category name can only contain letters, numbers, and spaces.";
     }
 
     return newErrors;
@@ -36,10 +37,13 @@ const AddCategory = () => {
     }
 
     try {
-      await axios.post('http://localhost:5153/api/category', { name, isActive });
-      navigate('/category/view-category');
+      await axios.post("http://localhost:5153/api/category", {
+        name,
+        isActive,
+      });
+      navigate("/category/view-category");
     } catch (error) {
-      console.error('Error adding category:', error);
+      console.error("Error adding category:", error);
     }
   };
 
@@ -56,7 +60,7 @@ const AddCategory = () => {
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
-                setErrors({ ...errors, name: '' });
+                setErrors({ ...errors, name: "" });
               }}
               isInvalid={!!errors.name} // Display error styling if validation fails
               required

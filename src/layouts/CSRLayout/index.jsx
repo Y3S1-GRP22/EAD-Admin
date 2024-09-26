@@ -1,10 +1,10 @@
 import SideNav from "../../components/SideNav";
 import Header from "../../components/Header";
 import { Outlet, Route, Routes } from "react-router-dom";
-import AdminProfile from "./profile";
+import VendorProfile from "./profile";
 import Dashboard from "./Dashboard";
 
-const AdminLayout = () => {
+const CSRLayout = () => {
   return (
     <>
       <Header />
@@ -19,7 +19,7 @@ const AdminLayout = () => {
             <Outlet />
             <Routes>
               <Route>
-                <Route path="profile" element={<AdminProfile />} />
+                <Route path="profile" element={<VendorProfile />} />
                 <Route path="dashboard" element={<Dashboard />} />
               </Route>
             </Routes>
@@ -30,4 +30,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default CSRLayout;

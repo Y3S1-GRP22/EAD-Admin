@@ -1,5 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 
+// eslint-disable-next-line react/prop-types
 export default function ConfirmationModal({ message, onConfirm, onCancel }) {
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -13,7 +15,7 @@ export default function ConfirmationModal({ message, onConfirm, onCancel }) {
             <div className="flex justify-end mt-4">
               <button
                 onClick={onCancel}
-                className="px-4 py-2 mr-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="px-4 py-2 mr-2 text-sm font-medium text-gray-600 bg-transparent border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
               </button>

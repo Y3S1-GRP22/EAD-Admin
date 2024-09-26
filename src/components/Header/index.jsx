@@ -1,27 +1,31 @@
-import { Fragment, useState } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { useEffect, useState } from "react";
+import { Dropdown, Nav, Navbar, Modal, Button } from "react-bootstrap"; // Import Bootstrap components
 import Person2Icon from "@mui/icons-material/Person2";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../../context/AuthContext";
+import { faMobile } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import ConfirmationModal from "../../layouts/CommonLayout/ConfirmationModal";
+import { jwtDecode } from "jwt-decode"; // Ensure jwt-decode is installed
 
 const userNavigation = [
   { name: "Your Profile", href: "/profile" },
   { name: "Sign out" },
 ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Header() {
-  const { isLoggedIn, logout } = useAuth();
-  let navigate = useNavigate();
+  const [username, setUsername] = useState(""); // State to store username
   const [showConfirm, setShowConfirm] = useState(false);
+  let navigate = useNavigate();
+
+  // Fetch token from localStorage and decode it to get username
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // Get token from localStorage
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      // Assuming your token has "username" or "email" field
+      setUsername(decodedToken.username || ""); // Set email or username
+    }
+  }, []);
 
   const handleSignOut = () => {
     setShowConfirm(true);
@@ -30,10 +34,8 @@ export default function Header() {
   const handleConfirmSignOut = () => {
     try {
       toast.success("You've logged out successfully");
-      localStorage.removeItem("auth");
-      localStorage.removeItem("isLoggedIn");
-      logout();
-      navigate("/");
+      localStorage.removeItem("token");
+      navigate("/"); // Navigate to home or login page
       setShowConfirm(false);
     } catch (error) {
       toast.error("Error logging out");
@@ -46,138 +48,95 @@ export default function Header() {
 
   return (
     <>
-      <div className="min-h-full">
-        <Disclosure as="nav" className="bg-gray-800">
-          {({ open }) => (
-            <>
-              <div className="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                  <div className="flex items-center">
-                    <Link
-                      to="/admin"
-                      className="flex-shrink-0 text-white text-2xl font-semibold italic"
-                    >
-                      <FontAwesomeIcon className="mr-[10px]" icon={faBook} />
-                      LearnHub
-                    </Link>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-4 flex items-center">
-                      {/* Conditional rendering based on login status */}
-                      {isLoggedIn ? (
-                        // Profile dropdown
-                        <Menu as="div" className="relative ml-3">
-                          <div>
-                            <Menu.Button className="relative flex max-w-xs items-center hover:bg-white hover:text-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                              <span className="absolute -inset-1.5" />
-                              <span className="sr-only">Open user menu</span>
-                              <Person2Icon
-                                className="hover:text-gray-800"
-                                style={{
-                                  color: "gray",
-                                  height: "26px",
-                                  width: "26px",
-                                }}
-                                aria-hidden="true"
-                              ></Person2Icon>
-                            </Menu.Button>
-                          </div>
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                          >
-                            <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              {userNavigation.map((item) => (
-                                <Menu.Item key={item.name}>
-                                  {({ active }) => (
-                                    <a
-                                      href={item.href}
-                                      onClick={
-                                        item.name === "Sign out"
-                                          ? handleSignOut
-                                          : null
-                                      }
-                                      className={classNames(
-                                        active ? "bg-gray-100" : "",
-                                        "block px-4 py-2 text-sm text-gray-700"
-                                      )}
-                                    >
-                                      {item.name}
-                                    </a>
-                                  )}
-                                </Menu.Item>
-                              ))}
-                            </Menu.Items>
-                          </Transition>
-                        </Menu>
-                      ) : (
-                        <a
-                          href="/"
-                          className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                        >
-                          Log in / Register
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                  <div className="-mr-2 flex md:hidden">
-                    {/* Mobile menu button */}
-                    <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-0.5" />
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Bars3Icon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </Disclosure.Button>
-                  </div>
-                </div>
-              </div>
+      <Navbar
+        expand="lg"
+        className="fixed top-0 left-0 w-full z-50" // Ensure the Header stays fixed at the top
+        style={{
+          background: "linear-gradient(135deg, #4a3a89 0%, #5a3d94 100%)", // Darker gradient to sync with sidebar
+          zIndex: 1000,
+        }}
+      >
+        <div className="container">
+          <Navbar.Brand
+            as={Link}
+            to="/admin"
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              color: "white",
+            }}
+          >
+            <FontAwesomeIcon icon={faMobile} className="me-2" />
+            iNnovate
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="outline-light"
+                  className="d-flex align-items-center"
+                  style={{
+                    color: "#d1e0f3", // Slightly muted light blue text for a softer contrast
+                    backgroundColor: "#0c1326", // Darker background for contrast
+                    borderColor: "#38bdf8", // Matching border color
+                  }}
+                >
+                  {username}
+                  <Person2Icon
+                    className="ms-2"
+                    style={{
+                      fontSize: "24px",
+                      color: "#38bdf8", // Cyan icon color for consistency
+                    }}
+                  />
+                </Dropdown.Toggle>
 
-              <Disclosure.Panel className="md:hidden">
-                <div className="border-t border-gray-700 pb-3 pt-4">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <Person2Icon></Person2Icon>
-                    </div>
-                  </div>
-                  <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    ))}
-                  </div>
-                </div>
-              </Disclosure.Panel>
-            </>
-          )}
-        </Disclosure>
-      </div>
-      {showConfirm && (
-        <ConfirmationModal
-          message="Are you sure you want to logout your account?"
-          onConfirm={handleConfirmSignOut}
-          onCancel={handleCancelSignOut}
-        />
-      )}
+                <Dropdown.Menu>
+                  {userNavigation.map((item) => (
+                    <Dropdown.Item
+                      key={item.name}
+                      as={Link}
+                      to={item.href}
+                      onClick={item.name === "Sign out" ? handleSignOut : null}
+                      style={{
+                        color: "#1e293b", // Dark text
+                        fontWeight: "500", // Slightly bold for better readability
+                      }}
+                    >
+                      {item.name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </Nav>
+          </Navbar.Collapse>
+        </div>
+      </Navbar>
+
+      {/* Confirmation Modal */}
+      <Modal show={showConfirm} onHide={handleCancelSignOut}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Logout</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to log out?</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            className="text-white bg-secondary"
+            onClick={handleCancelSignOut}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            className="text-white bg-primary"
+            onClick={handleConfirmSignOut}
+          >
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
