@@ -10,7 +10,7 @@ const AdminLayout = () => {
       <Header />
       <div className="flex sticky top-0 left-0">
         <SideNav />
-        <div className="flex flex-col flex-1" style={{ marginTop: "70px" }}>
+        <div className="flex flex-col flex-1" style={{ marginTop: "60px" }}>
           {" "}
           {/* Adjust the marginTop value as needed */}
           <div className="overflow-y-scroll h-full">

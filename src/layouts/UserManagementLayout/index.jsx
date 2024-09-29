@@ -13,6 +13,7 @@ import UpdateVendor from "./Vendors/UpdateVendors";
 import AddCSR from "./CSRs/AddCSRs";
 import ViewCSRs from "./CSRs/ViewCSRs";
 import UpdateCSR from "./CSRs/UpdateCSRs";
+import ViewCustomers from "./Customers/ViewCustomers";
 
 const UserManagementLayout = () => {
   return (
@@ -34,6 +35,7 @@ const UserManagementLayout = () => {
                 <Route path="add-CSRs" element={<AddCSR />} />
                 <Route path="view-CSRs" element={<ViewCSRs />} />
                 <Route path="update-CSR/:id" element={<UpdateCSR />} />
+                <Route path="view-customers" element={<ViewCustomers />} />
               </Route>
             </Routes>
           </div>

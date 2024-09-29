@@ -43,7 +43,7 @@ const ViewCategory = () => {
     if (!confirmed) return; // Exit if the user cancels
 
     try {
-      await axios.delete(`http://localhost:5153/api/category/${id}`);
+      await axios.delete(`http://localhost:5000/api/category/${id}`);
       // Refresh the category list after deletion
       setCategories(categories.filter((category) => category.id !== id));
     } catch (error) {
@@ -55,9 +55,9 @@ const ViewCategory = () => {
   const handleToggleActive = async (id, isActive) => {
     try {
       if (isActive) {
-        await axios.put(`http://localhost:5153/api/category/deactivate/${id}`);
+        await axios.put(`http://localhost:5000/api/category/deactivate/${id}`);
       } else {
-        await axios.put(`http://localhost:5153/api/category/activate/${id}`);
+        await axios.put(`http://localhost:5000/api/category/activate/${id}`);
       }
       // Refresh the category list after toggling status
       const updatedCategories = categories.map((category) =>

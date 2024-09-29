@@ -17,7 +17,7 @@ const Board = () => {
   return (
     <>
       <div className="flex justify-center">
-        <h1 className="text-4xl font-bold mb-8 mt-2">Admin Dashboard</h1>
+        <h1 className="text-4xl font-bold mb-8 mt-2">CSR Dashboard</h1>
       </div>
       <div className="flex h-full w-full gap-3 overflow-scroll p-2">
         <Column

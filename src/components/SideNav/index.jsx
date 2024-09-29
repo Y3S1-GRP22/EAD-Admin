@@ -3,7 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import adminSideNavigation from "../../data/AdminSideNavigation.json";
-import instructorSideNavigation from "../../data/instructorSideNavigation.json";
+import vendorSideNavigation from "../../data/VendorSideNavigation.json";
+import CSRSideNavigation from "../../data/CSRSideNavigation.json";
 import { jwtDecode } from "jwt-decode";
 
 const SideNav = () => {
@@ -38,7 +39,11 @@ const SideNav = () => {
   const sideNavigationData =
     userRole === "Admin"
       ? adminSideNavigation.data
-      : instructorSideNavigation.data;
+      : userRole === "Vendor"
+      ? vendorSideNavigation.data
+      : userRole === "CSR"
+      ? CSRSideNavigation.data
+      : null;
 
   return (
     <>

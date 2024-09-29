@@ -1,248 +1,246 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faMobile } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import background from "../../assets/admin.avif";
+import background from "../../assets/apple.png";
 import { useAuth } from "../../context/AuthContext";
 import ConfirmationModal from "../CommonLayout/ConfirmationModal";
+import { Button } from "react-bootstrap";
+import { jwtDecode } from "jwt-decode"; // Correct the import
 
 export default function UserProfile() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState(""); // Input password
+  const [userName, setUserName] = useState("");
   const [contact, setContact] = useState("");
+  const [address, setAddress] = useState("");
   const [id, setId] = useState("");
-  const navigate = useNavigate();
   const [role, setRole] = useState("");
-  const { logout } = useAuth();
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState(""); // Store old password
+
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("auth"));
-    if (userData && userData.user) {
-      const { fullName, email, contact, id, role } = userData.user;
-      setFullName(fullName);
-      setEmail(email);
-      setContact(contact);
-      setId(id);
-      setRole(role);
-    }
+    const getUserDetails = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const response = await axios.get(
+            `http://localhost:5000/api/user/user/${decodedToken.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(response);
+
+          setUserName(response.data.username);
+          setEmail(response.data.email); // Non-editable field
+          setContact(response.data.mobileNumber);
+          setId(response.data.id);
+          setAddress(response.data.address);
+          setOldPassword(response.data.password); // Store old password
+          setRole(response.data.role);
+        }
+      } catch (error) {
+        toast.error("Error fetching user data.");
+      }
+    };
+
+    getUserDetails();
   }, []);
 
   const updateProfile = async (e) => {
     e.preventDefault();
     try {
-      const userData = JSON.parse(localStorage.getItem("auth"));
-      const token = userData.accessToken;
-      const { data } = await axios.put(
-        `http://localhost:8090/v1/users/${id}`,
-        {
-          fullName,
-          email,
-          password,
-          contact,
-          role,
-        },
+      const token = localStorage.getItem("token");
+
+      // If no new password is entered, keep the old password
+      const updatedData = {
+        id,
+        username: userName,
+        email, // Non-editable
+        mobileNumber: contact,
+        address,
+        password: password || oldPassword, // Use old password if no new password
+        role: role,
+        isActive: true,
+      };
+
+      console.log(updatedData);
+
+      await axios.put(
+        `http://localhost:5000/api/user/update/${id}`,
+        updatedData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (data?.success) {
-        toast.success("You've updated your account successfully.");
-        localStorage.removeItem("auth");
-        localStorage.removeItem("isLoggedIn");
-        logout();
-        navigate("/signin");
-      } else {
-        toast.error(data?.message);
-      }
+
+      toast.success("You've updated your account successfully.");
+      logout();
+      navigate("/");
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("An error occurred while deleting the user.");
-      }
+      toast.error(
+        error.response
+          ? error.response.data.message
+          : "An error occurred while updating the user."
+      );
     }
   };
 
-  const deleteProfile = async (e) => {
+  const deleteProfile = (e) => {
     e.preventDefault();
-    setShowConfirmationModal(true); // Show the confirmation modal
+    setShowConfirmationModal(true); // Show confirmation modal
   };
 
   const confirmDelete = async () => {
     try {
-      const userData = JSON.parse(localStorage.getItem("auth"));
-      const token = userData.accessToken;
+      const token = localStorage.getItem("token");
       const { data } = await axios.delete(
-        `http://localhost:8090/v1/users/${id}`,
+        `http://localhost:5000/api/user/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (data?.success) {
+
+      if (data.success) {
         toast.success("You've deleted your account successfully.");
-        localStorage.removeItem("auth");
-        localStorage.removeItem("isLoggedIn");
         logout();
-        navigate("/signup");
+        navigate("/");
       } else {
-        toast.error(data?.message);
+        toast.error(data.message);
       }
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("An error occurred while deleting the user.");
-      }
+      toast.error(
+        error.response
+          ? error.response.data.message
+          : "An error occurred while deleting the user."
+      );
     }
   };
 
   const cancelDelete = () => {
-    setShowConfirmationModal(false);
+    setShowConfirmationModal(false); // Close the modal without deleting
   };
 
   return (
     <>
       <div
-        className="flex min-h-screen justify-center items-center bg-cover bg-center"
+        className="d-flex justify-content-center align-items-center vh-250"
         style={{
           backgroundImage: `url(${background})`,
-          width: "100%",
-          height: "100%",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
-        <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <div className="flex justify-center text-black text-2xl font-semibold italic">
-              <FontAwesomeIcon className="mr-[10px]" icon={faBook} />
-              LearnHub
-            </div>
-            <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-              Your User Profile
-            </h2>
-          </div>
+        <div className="card w-100" style={{ maxWidth: "30rem" }}>
+          <div className="card-body text-center">
+            <h1 className="text-dark display-4">
+              <FontAwesomeIcon className="me-2" icon={faMobile} />
+              iNnovate
+            </h1>
+            <h3 className="mt-4 mb-4 display-6 fw-medium">Your User Profile</h3>
 
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <form className="mt-6 space-y-6" action="#" method="POST">
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Full Name
+            <form onSubmit={updateProfile}>
+              <div className="mb-3">
+                <label htmlFor="userName" className="form-label">
+                  User Name
                 </label>
-                <div className="mt-2">
-                  <input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    className="block p-5 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => {
-                      setFullName(e.target.value);
-                    }}
-                    value={fullName}
-                  />
-                </div>
+                <input
+                  id="userName"
+                  name="userName"
+                  type="text"
+                  required
+                  className="form-control"
+                  onChange={(e) => setUserName(e.target.value)}
+                  value={userName}
+                />
               </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
                   Email Address
                 </label>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="block p-5 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    value={email}
-                    readOnly
-                  />
-                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  className="form-control"
+                  value={email}
+                  readOnly
+                />
               </div>
 
-              <div>
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Password
-                  </label>
-                </div>
-                <div className="mt-2">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    className="block w-full p-5 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                    value={password}
-                  />
-                </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  Password (leave blank if unchanged)
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  className="form-control"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  placeholder="Enter new password"
+                />
               </div>
-              <div>
-                <label
-                  htmlFor="contact"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+
+              <div className="mb-3">
+                <label htmlFor="contact" className="form-label">
                   Contact Number
                 </label>
-                <div className="mt-2">
-                  <input
-                    id="contact"
-                    name="contact"
-                    type="number"
-                    autoComplete="contact"
-                    required
-                    className="block p-5 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => {
-                      setContact(e.target.value);
-                    }}
-                    value={contact}
-                  />
-                </div>
+                <input
+                  id="contact"
+                  name="contact"
+                  type="text"
+                  required
+                  className="form-control"
+                  onChange={(e) => setContact(e.target.value)}
+                  value={contact}
+                />
               </div>
-              <div className="flex justify-center space-x-4">
-                <button
-                  type="button"
-                  onClick={updateProfile}
-                  className="flex-1 justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
+
+              <div className="mb-3">
+                <label htmlFor="address" className="form-label">
+                  Address
+                </label>
+                <input
+                  id="address"
+                  name="address"
+                  type="text"
+                  required
+                  className="form-control"
+                  onChange={(e) => setAddress(e.target.value)}
+                  value={address}
+                />
+              </div>
+
+              <div className="d-flex justify-content-between">
+                <Button variant="outline-primary" type="submit">
                   Update Profile
-                </button>
-                <button
-                  type="button"
-                  onClick={deleteProfile}
-                  className="flex-1 justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
+                </Button>
+
+                <Button variant="outline-danger" onClick={deleteProfile}>
                   Delete Profile
-                </button>
+                </Button>
               </div>
             </form>
           </div>
         </div>
       </div>
+
       {showConfirmationModal && (
         <ConfirmationModal
           message="Are you sure you want to delete your account? This action cannot be undone."

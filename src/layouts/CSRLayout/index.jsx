@@ -1,7 +1,6 @@
 import SideNav from "../../components/SideNav";
 import Header from "../../components/Header";
 import { Outlet, Route, Routes } from "react-router-dom";
-import VendorProfile from "./profile";
 import Dashboard from "./Dashboard";
 
 const CSRLayout = () => {
@@ -19,7 +18,6 @@ const CSRLayout = () => {
             <Outlet />
             <Routes>
               <Route>
-                <Route path="profile" element={<VendorProfile />} />
                 <Route path="dashboard" element={<Dashboard />} />
               </Route>
             </Routes>

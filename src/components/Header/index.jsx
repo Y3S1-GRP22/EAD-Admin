@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode"; // Ensure jwt-decode is installed
 
 const userNavigation = [
-  { name: "Your Profile", href: "/profile" },
+  { name: "Your Profile", href: "/admin/profile" },
   { name: "Sign out" },
 ];
 

@@ -75,15 +75,6 @@
         "user-graduate"
       ],
       "link": "/inventory/view-inventory"
-    },
-    {
-      "name": "Payment Management",
-      "icon": [
-        "fas",
-        "wallet"
-      ],
-      "link": "/payment/view-payment",
-      "subMenu": []
     }
   ]
 }

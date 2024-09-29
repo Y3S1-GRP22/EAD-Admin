@@ -11,6 +11,7 @@ import VendorLayout from "../layouts/VendorLayout";
 import AdminLayout from "../layouts/AdminLayout";
 import CSRLayout from "../layouts/CSRLayout";
 import UserManagementLayout from "../layouts/UserManagementLayout";
+import NotFound from "../NotFound";
 
 const FrontendRoutes = () => {
   return (
@@ -23,7 +24,6 @@ const FrontendRoutes = () => {
           </Route>
 
           <Route path="vendor" element={<VendorLayout />}>
-            <Route path="profile" />
             <Route path="dashboard" />
           </Route>
 
@@ -37,6 +37,7 @@ const FrontendRoutes = () => {
             <Route path="add-CSRs" />
             <Route path="view-CSRs" />
             <Route path="update-CSR/:id" />
+            <Route path="view-customers" />
           </Route>
 
           <Route path="admin" element={<AdminLayout />}>
@@ -45,7 +46,6 @@ const FrontendRoutes = () => {
           </Route>
 
           <Route path="CSR" element={<CSRLayout />}>
-            <Route path="profile" />
             <Route path="dashboard" />
           </Route>
 
@@ -69,6 +69,8 @@ const FrontendRoutes = () => {
             <Route path="view-inventory-details/:id" />
             <Route path="update-inventory/:id" />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>

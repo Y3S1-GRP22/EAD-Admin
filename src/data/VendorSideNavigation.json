@@ -1,0 +1,39 @@
+{
+    "data": [
+        {
+            "name": "Dashboard",
+            "icon": [
+                "fas",
+                "chart-line"
+            ],
+            "link": "/vendor/dashboard",
+            "subMenu": []
+        },
+        {
+            "name": "Category Management",
+            "icon": [
+                "fas",
+                "book-open"
+            ],
+            "link": "/category/view-category",
+            "subMenu": []
+        },
+        {
+            "name": "Product Management",
+            "icon": [
+                "fas",
+                "book-open"
+            ],
+            "link": "/product/view-product",
+            "subMenu": []
+        },
+        {
+            "name": "Inventory Management",
+            "icon": [
+                "fas",
+                "user-graduate"
+            ],
+            "link": "/inventory/view-inventory"
+        }
+    ]
+}
