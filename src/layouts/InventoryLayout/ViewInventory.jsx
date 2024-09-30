@@ -100,13 +100,13 @@ const ViewInventory = () => {
     if (currentProduct) {
       try {
         await axios.put(
-          `http://localhost:5153/api/inventory/update-stock/${currentProduct.id}`,
+          `http://localhost:5000/api/inventory/update-stock/${currentProduct.id}`,
           { stock: parseInt(updateQuantity) }
         );
         alert("Stock updated successfully");
         setShowUpdateModal(false);
         setUpdateQuantity("");
-        const response = await axios.get("http://localhost:5153/api/products");
+        const response = await axios.get("http://localhost:5000/api/products");
         setProducts(response.data);
         setErrors({});
       } catch (error) {
@@ -125,13 +125,13 @@ const ViewInventory = () => {
     if (currentProduct) {
       try {
         await axios.put(
-          `http://localhost:5153/api/inventory/remove-stock/${currentProduct.id}`,
+          `http://localhost:5000/api/inventory/remove-stock/${currentProduct.id}`,
           { stock: parseInt(removeQuantity) }
         );
         alert("Stock removed successfully");
         setShowRemoveModal(false);
         setRemoveQuantity("");
-        const response = await axios.get("http://localhost:5153/api/products");
+        const response = await axios.get("http://localhost:5000/api/products");
         setProducts(response.data);
         setErrors({});
       } catch (error) {

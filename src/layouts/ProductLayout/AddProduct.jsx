@@ -20,7 +20,7 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5153/api/category');
+        const response = await axios.get('http://localhost:5000/api/category');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -53,7 +53,7 @@ const AddProduct = () => {
     
     if (validateForm()) {
       try {
-        const productResponse = await axios.post('http://localhost:5153/api/products', {
+        const productResponse = await axios.post('http://localhost:5000/api/products', {
           name,
           description,
           price,
@@ -69,7 +69,7 @@ const AddProduct = () => {
           imageFormData.append('productId', productId);
           imageFormData.append('imageFile', imageFile);
   
-          const uploadResponse = await axios.post('http://localhost:5153/api/products/upload-image', imageFormData, {
+          const uploadResponse = await axios.post('http://localhost:5000/api/products/upload-image', imageFormData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -83,7 +83,7 @@ const AddProduct = () => {
           }
         }
   
-        await axios.put(`http://localhost:5153/api/products/${productId}`, {
+        await axios.put(`http://localhost:5000/api/products/${productId}`, {
           name,
           description,
           price,

@@ -82,10 +82,37 @@ const ViewCategory = () => {
         </Button>
       </div>
 
+      <div>
+      <Button
+                variant={filter === "all" ? "outline-info" : "outline-primary"}
+                onClick={() => setFilter("all")}
+              >
+                All
+              </Button>
+              <Button
+                variant={
+                  filter === "active" ? "outline-info" : "outline-primary"
+                }
+                className="ml-2"
+                onClick={() => setFilter("active")}
+              >
+                Active
+              </Button>
+              <Button
+                variant={
+                  filter === "inactive" ? "outline-info" : "outline-primary"
+                }
+                className="ml-2"
+                onClick={() => setFilter("inactive")}
+              >
+                Deactive
+              </Button>
+      </div>
+
       <Table striped bordered hover>
         <thead>
           {/* Filter Row */}
-          <tr>
+          {/* <tr>
             <td colSpan="4" className="text-center">
               <Button
                 variant={filter === "all" ? "outline-info" : "outline-primary"}
@@ -112,7 +139,7 @@ const ViewCategory = () => {
                 Deactive
               </Button>
             </td>
-          </tr>
+          </tr> */}
           {/* Table Header Row */}
           <tr>
             <th>#</th>

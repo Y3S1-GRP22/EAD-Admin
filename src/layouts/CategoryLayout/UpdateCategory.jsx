@@ -15,7 +15,7 @@ const UpdateCategory = () => {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`http://localhost:5153/api/category/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/category/${id}`);
         setName(response.data.name);
         setIsActive(response.data.isActive);
       } catch (error) {
@@ -52,7 +52,7 @@ const UpdateCategory = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5153/api/category/${id}`, { name, isActive });
+      await axios.put(`http://localhost:5000/api/category/${id}`, { name, isActive });
       navigate('/category/view-category');
     } catch (error) {
       console.error('Error updating category:', error);

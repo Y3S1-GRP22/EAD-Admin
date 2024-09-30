@@ -12,7 +12,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5153/api/products/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
         setProduct(response.data);
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -33,7 +33,7 @@ const ProductDetails = () => {
     if (!confirmed) return; // Exit if the user cancels
 
     try {
-      await axios.delete(`http://localhost:5153/api/products/${id}`);
+      await axios.delete(`http://localhost:5000/api/products/${id}`);
       navigate('/product/view-products'); // Redirect after deletion
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -44,9 +44,9 @@ const ProductDetails = () => {
   const handleToggleActive = async () => {
     try {
       if (product.isActive) {
-        await axios.put(`http://localhost:5153/api/products/deactivate/${id}`);
+        await axios.put(`http://localhost:5000/api/products/deactivate/${id}`);
       } else {
-        await axios.put(`http://localhost:5153/api/products/activate/${id}`);
+        await axios.put(`http://localhost:5000/api/products/activate/${id}`);
       }
       setProduct(prevProduct => ({ ...prevProduct, isActive: !prevProduct.isActive }));
     } catch (error) {
