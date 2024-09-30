@@ -6,6 +6,8 @@ import CommonLayout from "../layouts/CommonLayout";
 import SignIn from "../layouts/CommonLayout/SignIn";
 import CategoryLayout from "../layouts/CategoryLayout";
 import ProductLayout from "../layouts/ProductLayout";
+import CategoryLayoutAdmin from "../layouts/CategoryLayoutAdmin";
+import ProductLayoutAdmin from "../layouts/ProductLayoutAdmin";
 import InventoryLayout from "../layouts/InventoryLayout";
 import VendorLayout from "../layouts/VendorLayout";
 import AdminLayout from "../layouts/AdminLayout";
@@ -64,6 +66,27 @@ const FrontendRoutes = () => {
           </Route>
 
           <Route path="inventory" element={<InventoryLayout />}>
+            <Route path="view-inventory" />
+            <Route path="add-inventory" />
+            <Route path="view-inventory-details/:id" />
+            <Route path="update-inventory/:id" />
+          </Route>
+
+          <Route path="admin-category" element={<CategoryLayoutAdmin />}>
+            <Route path="view-category" />
+            <Route path="add-category" />
+            <Route path="view-category-details/:id" />
+            <Route path="update-category/:id" />
+          </Route>
+
+          <Route path="admin-product" element={<ProductLayoutAdmin />}>
+            <Route path="view-product" />
+            <Route path="add-product" />
+            <Route path="view-product-details/:id" />
+            <Route path="update-product/:id" />
+          </Route>
+
+          <Route path="admin-inventory" element={<InventoryLayout />}>
             <Route path="view-inventory" />
             <Route path="add-inventory" />
             <Route path="view-inventory-details/:id" />

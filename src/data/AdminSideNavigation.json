@@ -56,7 +56,7 @@
         "fas",
         "book-open"
       ],
-      "link": "/category/view-category",
+      "link": "/admin-category/view-category",
       "subMenu": []
     },
     {
@@ -65,7 +65,7 @@
         "fas",
         "book-open"
       ],
-      "link": "/product/view-product",
+      "link": "/admin-product/view-product",
       "subMenu": []
     },
     {
@@ -74,7 +74,7 @@
         "fas",
         "user-graduate"
       ],
-      "link": "/inventory/view-inventory"
+      "link": "/admin-inventory/view-inventory"
     }
   ]
 }
