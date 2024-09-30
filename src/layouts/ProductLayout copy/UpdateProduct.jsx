@@ -9,6 +9,7 @@ import axios from "axios";
 const UpdateProduct = () => {
   const { id } = useParams();
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
@@ -20,6 +21,12 @@ const UpdateProduct = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      const token = localStorage.getItem("token"); // Get token from localStorage
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        // Assuming your token has "username" or "email" field
+        setUsername(decodedToken.email || ""); // Set email
+      }
       try {
         const response = await axios.get('http://localhost:5000/api/category');
         setCategories(response.data);
@@ -88,7 +95,7 @@ const UpdateProduct = () => {
 
         await axios.put(`http://localhost:5000/api/products/${id}`, {
           Id: id,
-          vendorId: "TEST",  // TODO: Add real-time vendor logic
+          vendorId: email,  // TODO: Add real-time vendor logic
           name,
           description,
           price,
