@@ -10,15 +10,6 @@
             "subMenu": []
         },
         {
-            "name": "Category Management",
-            "icon": [
-                "fas",
-                "book-open"
-            ],
-            "link": "/category/view-category",
-            "subMenu": []
-        },
-        {
             "name": "Product Management",
             "icon": [
                 "fas",
@@ -26,14 +17,6 @@
             ],
             "link": "/product/view-product",
             "subMenu": []
-        },
-        {
-            "name": "Inventory Management",
-            "icon": [
-                "fas",
-                "user-graduate"
-            ],
-            "link": "/inventory/view-inventory"
         }
     ]
 }

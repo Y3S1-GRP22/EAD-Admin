@@ -67,7 +67,7 @@ export default function Header() {
             }}
           >
             <FontAwesomeIcon icon={faMobile} className="me-2" />
-            iNnovate
+            iCorner.
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

@@ -187,7 +187,7 @@ const ViewProducts = () => {
                 <td>{product.name}</td>
                 <td style={{ width: '250px' }}>{product.description}</td>
                 <td>${product.price.toFixed(2)}</td>
-                <td>
+                <td style={{ width: '90px' }}>
                   {category ? (category.isActive ? 'Active' : 'Inactive') : 'Unknown'}
                 </td>
                 <td>

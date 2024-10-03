@@ -120,7 +120,7 @@ export default function SignIn() {
                 <div className="text-center">
                   <h1 className="text-dark display-4">
                     <FontAwesomeIcon className="me-2" icon={faMobile} />
-                    iNnovate
+                    iCorner.
                   </h1>
                   <h3 className="mt-4 mb-4 display-6 fw-medium">
                     Sign in to your account

@@ -172,7 +172,7 @@ const ViewProducts = () => {
             <th>Description</th>
             <th>Price</th>
             <th>Category Status</th>
-            <th>Status</th>
+            {/* <th>Status</th> */}
             <th>Image</th> {/* New Column */}
             <th>Actions</th>
           </tr>
@@ -186,11 +186,11 @@ const ViewProducts = () => {
                 <td style={{ width: '90px' }}>{index + 1}</td>
                 <td>{product.name}</td>
                 <td style={{ width: '250px' }}>{product.description}</td>
-                <td>${product.price.toFixed(2)}</td>
-                <td>
+                <td style={{ width: '90px' }}>${product.price.toFixed(2)}</td>
+                <td style={{ width: '90px' }}>
                   {category ? (category.isActive ? 'Active' : 'Inactive') : 'Unknown'}
                 </td>
-                <td>
+                {/* <td>
                   {product.isActive ? 'Active' : 'Inactive'}
                   <Button
                     variant={product.isActive ? 'outline-warning' : 'outline-success'}
@@ -199,7 +199,7 @@ const ViewProducts = () => {
                   >
                     {product.isActive ? 'Deactivate' : 'Activate'}
                   </Button>
-                </td>
+                </td> */}
                 <td>
                   {product.imagePath ? (
                     <img
