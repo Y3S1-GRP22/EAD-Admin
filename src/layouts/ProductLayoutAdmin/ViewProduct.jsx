@@ -203,7 +203,7 @@ const ViewProducts = () => {
                 <td>
                   {product.imagePath ? (
                     <img
-                      src={`http://localhost:5153${product.imagePath}`} // Adjust URL if necessary
+                      src={`http://localhost:5000${product.imagePath}`} // Adjust URL if necessary
                       alt={product.name}
                       style={{ width: '100px', height: 'auto' }}
                     />
