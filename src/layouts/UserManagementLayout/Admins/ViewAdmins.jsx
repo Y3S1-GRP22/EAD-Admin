@@ -28,7 +28,7 @@ const ViewAdmins = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/api/admin/admins",
+        "http://192.168.109.81/iCorner/api/admin/admins",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ const ViewAdmins = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:5000/api/user/delete/${selectedAdminId}`,
+        `http://192.168.109.81/iCorner/api/user/delete/${selectedAdminId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -100,8 +100,8 @@ const ViewAdmins = () => {
       const token = localStorage.getItem("token");
       const endpoint =
         activationAction === "activate"
-          ? `http://localhost:5000/api/admin/activate/${selectedAdminId}`
-          : `http://localhost:5000/api/admin/deactivate/${selectedAdminId}`;
+          ? `http://192.168.109.81/iCorner/api/admin/activate/${selectedAdminId}`
+          : `http://192.168.109.81/iCorner/api/admin/deactivate/${selectedAdminId}`;
 
       await axios.patch(
         endpoint,

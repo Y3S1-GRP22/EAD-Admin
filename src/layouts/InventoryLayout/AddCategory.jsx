@@ -13,7 +13,7 @@ const AddCategory = () => {
     event.preventDefault();
 
     try {
-      await axios.post('http://localhost:5000/api/category', { name, isActive });
+      await axios.post('http://192.168.109.81/iCorner/api/category', { name, isActive });
       navigate('/category/view-category');
     } catch (error) {
       console.error('Error adding category:', error);

@@ -25,7 +25,7 @@ const ViewInventory = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get("http://192.168.109.81/iCorner/api/products");
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -34,7 +34,7 @@ const ViewInventory = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/category");
+        const response = await axios.get("http://192.168.109.81/iCorner/api/category");
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -100,13 +100,13 @@ const ViewInventory = () => {
     if (currentProduct) {
       try {
         await axios.put(
-          `http://localhost:5000/api/inventory/update-stock/${currentProduct.id}`,
+          `http://192.168.109.81/iCorner/api/inventory/update-stock/${currentProduct.id}`,
           { stock: parseInt(updateQuantity) }
         );
         alert("Stock updated successfully");
         setShowUpdateModal(false);
         setUpdateQuantity("");
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get("http://192.168.109.81/iCorner/api/products");
         setProducts(response.data);
         setErrors({});
       } catch (error) {
@@ -125,13 +125,13 @@ const ViewInventory = () => {
     if (currentProduct) {
       try {
         await axios.put(
-          `http://localhost:5000/api/inventory/remove-stock/${currentProduct.id}`,
+          `http://192.168.109.81/iCorner/api/inventory/remove-stock/${currentProduct.id}`,
           { stock: parseInt(removeQuantity) }
         );
         alert("Stock removed successfully");
         setShowRemoveModal(false);
         setRemoveQuantity("");
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get("http://192.168.109.81/iCorner/api/products");
         setProducts(response.data);
         setErrors({});
       } catch (error) {

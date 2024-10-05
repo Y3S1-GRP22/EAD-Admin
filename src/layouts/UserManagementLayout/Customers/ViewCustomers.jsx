@@ -24,7 +24,7 @@ const ViewCustomers = () => {
   const fetchCustomers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/customer", {
+      const response = await axios.get("http://192.168.109.81/iCorner/api/customer", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,8 +58,8 @@ const ViewCustomers = () => {
       const token = localStorage.getItem("token");
       const endpoint =
         activationAction === "activate"
-          ? `http://localhost:5000/api/customer/activate/${selectedCustomerId}`
-          : `http://localhost:5000/api/customer/deactivate/${selectedCustomerId}`;
+          ? `http://192.168.109.81/iCorner/api/customer/activate/${selectedCustomerId}`
+          : `http://192.168.109.81/iCorner/api/customer/deactivate/${selectedCustomerId}`;
 
       await axios.put(
         endpoint,

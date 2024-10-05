@@ -28,7 +28,7 @@ const UpdateCSR = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:5000/api/user/user/${id}`,
+          `http://192.168.109.81/iCorner/api/user/user/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach token if required
@@ -84,7 +84,7 @@ const UpdateCSR = () => {
         };
         console.log(updateData);
         await axios.put(
-          `http://localhost:5000/api/user/update/${id}`,
+          `http://192.168.109.81/iCorner/api/user/update/${id}`,
           updateData,
           {
             headers: {

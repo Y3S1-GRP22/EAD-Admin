@@ -31,7 +31,7 @@ export default function UserProfile() {
         if (token) {
           const decodedToken = jwtDecode(token);
           const response = await axios.get(
-            `http://localhost:5000/api/user/user/${decodedToken.id}`,
+            `http://192.168.109.81/iCorner/api/user/user/${decodedToken.id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export default function UserProfile() {
       console.log(updatedData);
 
       await axios.put(
-        `http://localhost:5000/api/user/update/${id}`,
+        `http://192.168.109.81/iCorner/api/user/update/${id}`,
         updatedData,
         {
           headers: {
@@ -106,7 +106,7 @@ export default function UserProfile() {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.delete(
-        `http://localhost:5000/api/user/delete/${id}`,
+        `http://192.168.109.81/iCorner/api/user/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -54,7 +54,7 @@ const AddVendor = () => {
     if (validationErrors === true) {
       setLoading(true); // Set loading to true
       try {
-        await axios.post("http://localhost:5000/api/user", vendorData);
+        await axios.post("http://192.168.109.81/iCorner/api/user", vendorData);
         toast.success("Vendor added successfully!"); // Show success toast
         setTimeout(() => {
           navigate("/users/view-vendors");

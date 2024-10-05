@@ -37,7 +37,7 @@ const AddCategory = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/category", {
+      await axios.post("http://192.168.109.81/iCorner/api/category", {
         name,
         isActive,
       });

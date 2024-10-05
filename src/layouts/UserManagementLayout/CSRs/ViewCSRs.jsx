@@ -27,7 +27,7 @@ const ViewCSRs = () => {
   const fetchCSRs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/admin/csrs", {
+      const response = await axios.get("http://192.168.109.81/iCorner/api/admin/csrs", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,7 +58,7 @@ const ViewCSRs = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:5000/api/user/delete/${selectedCSRId}`,
+        `http://192.168.109.81/iCorner/api/user/delete/${selectedCSRId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -97,8 +97,8 @@ const ViewCSRs = () => {
       const token = localStorage.getItem("token");
       const endpoint =
         activationAction === "activate"
-          ? `http://localhost:5000/api/admin/activate/${selectedCSRId}`
-          : `http://localhost:5000/api/admin/deactivate/${selectedCSRId}`;
+          ? `http://192.168.109.81/iCorner/api/admin/activate/${selectedCSRId}`
+          : `http://192.168.109.81/iCorner/api/admin/deactivate/${selectedCSRId}`;
 
       await axios.patch(
         endpoint,

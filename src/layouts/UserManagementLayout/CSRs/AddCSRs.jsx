@@ -54,7 +54,7 @@ const AddCSR = () => {
     if (validationErrors === true) {
       setLoading(true); // Set loading to true
       try {
-        await axios.post("http://localhost:5000/api/user", CSRData);
+        await axios.post("http://192.168.109.81/iCorner/api/user", CSRData);
         toast.success("CSR added successfully!"); // Show success toast
         setTimeout(() => {
           navigate("/users/view-CSRs");

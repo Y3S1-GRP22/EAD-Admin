@@ -15,7 +15,7 @@ const ViewProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
+        const response = await axios.get('http://192.168.109.81/iCorner/api/products');
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -24,7 +24,7 @@ const ViewProducts = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/category');
+        const response = await axios.get('http://192.168.109.81/iCorner/api/category');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -50,7 +50,7 @@ const ViewProducts = () => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      await axios.delete(`http://192.168.109.81/iCorner/api/products/${id}`);
       setProducts(products.filter(product => product.id !== id));
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -60,9 +60,9 @@ const ViewProducts = () => {
   const handleToggleActive = async (id, isActive) => {
     try {
       if (isActive) {
-        await axios.put(`http://localhost:5000/api/products/deactivate/${id}`);
+        await axios.put(`http://192.168.109.81/iCorner/api/products/deactivate/${id}`);
       } else {
-        await axios.put(`http://localhost:5000/api/products/activate/${id}`);
+        await axios.put(`http://192.168.109.81/iCorner/api/products/activate/${id}`);
       }
       const updatedProducts = products.map(product =>
         product.id === id ? { ...product, isActive: !isActive } : product
@@ -203,7 +203,7 @@ const ViewProducts = () => {
                 <td>
                   {product.imagePath ? (
                     <img
-                      src={`http://localhost:5000${product.imagePath}`} // Adjust URL if necessary
+                      src={`http://192.168.109.81/iCorner${product.imagePath}`} // Adjust URL if necessary
                       alt={product.name}
                       style={{ width: '100px', height: 'auto' }}
                     />

@@ -12,7 +12,7 @@ const ViewCategory = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/category");
+        const response = await axios.get("http://192.168.109.81/iCorner/api/category");
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -43,7 +43,7 @@ const ViewCategory = () => {
     if (!confirmed) return; // Exit if the user cancels
 
     try {
-      await axios.delete(`http://localhost:5000/api/category/${id}`);
+      await axios.delete(`http://192.168.109.81/iCorner/api/category/${id}`);
       // Refresh the category list after deletion
       setCategories(categories.filter((category) => category.id !== id));
     } catch (error) {
@@ -55,9 +55,9 @@ const ViewCategory = () => {
   const handleToggleActive = async (id, isActive) => {
     try {
       if (isActive) {
-        await axios.put(`http://localhost:5000/api/category/deactivate/${id}`);
+        await axios.put(`http://192.168.109.81/iCorner/api/category/deactivate/${id}`);
       } else {
-        await axios.put(`http://localhost:5000/api/category/activate/${id}`);
+        await axios.put(`http://192.168.109.81/iCorner/api/category/activate/${id}`);
       }
       // Refresh the category list after toggling status
       const updatedCategories = categories.map((category) =>

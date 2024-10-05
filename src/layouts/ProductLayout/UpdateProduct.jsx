@@ -27,7 +27,7 @@ const UpdateProduct = () => {
         setEmail(decodedToken.email || ""); // Set email
       }
       try {
-        const response = await axios.get('http://localhost:5000/api/category');
+        const response = await axios.get('http://192.168.109.81/iCorner/api/category');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -36,7 +36,7 @@ const UpdateProduct = () => {
 
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const response = await axios.get(`http://192.168.109.81/iCorner/api/products/${id}`);
         const product = response.data;
         setName(product.name);
         setDescription(product.description);
@@ -81,7 +81,7 @@ const UpdateProduct = () => {
           imageFormData.append('productId', id); // Use the current product ID
           imageFormData.append('imageFile', imageFile);
 
-          const uploadResponse = await axios.post('http://localhost:5000/api/products/upload-image', imageFormData, {
+          const uploadResponse = await axios.post('http://192.168.109.81/iCorner/api/products/upload-image', imageFormData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -92,7 +92,7 @@ const UpdateProduct = () => {
           }
         }
 
-        await axios.put(`http://localhost:5000/api/products/${id}`, {
+        await axios.put(`http://192.168.109.81/iCorner/api/products/${id}`, {
           Id: id,
           vendorId: email,  // TODO: Add real-time vendor logic
           name,
