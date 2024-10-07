@@ -9,6 +9,7 @@ import ProductLayout from "../layouts/ProductLayout";
 import CategoryLayoutAdmin from "../layouts/CategoryLayoutAdmin";
 import ProductLayoutAdmin from "../layouts/ProductLayoutAdmin";
 import InventoryLayout from "../layouts/InventoryLayout";
+import InventoryLayoutAdmin from "../layouts/InventoryLayoutAdmin";
 import VendorLayout from "../layouts/VendorLayout";
 import AdminLayout from "../layouts/AdminLayout";
 import CSRLayout from "../layouts/CSRLayout";
@@ -87,7 +88,7 @@ const FrontendRoutes = () => {
             <Route path="update-product/:id" />
           </Route>
 
-          <Route path="admin-inventory" element={<InventoryLayout />}>
+          <Route path="admin-inventory" element={<InventoryLayoutAdmin />}>
             <Route path="view-inventory" />
             <Route path="add-inventory" />
             <Route path="view-inventory-details/:id" />
