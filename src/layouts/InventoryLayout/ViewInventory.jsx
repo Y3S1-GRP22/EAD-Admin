@@ -23,6 +23,7 @@ const ViewInventory = () => {
   const [removeQuantity, setRemoveQuantity] = useState("");
   const [errors, setErrors] = useState({});
   const [role, setRole] = useState(""); // Store role
+  const [vendorId, setVendorId] = useState("");
   const navigate = useNavigate();
 
   // Fetch products, categories, and user role on component mount
@@ -49,7 +50,8 @@ const ViewInventory = () => {
       const token = localStorage.getItem("token"); // Get the token
       if (token) {
         const decodedToken = jwtDecode(token);
-        setRole(decodedToken.role); // Set the role from decoded token
+        setRole(decodedToken.role); // Set the role from decoded 
+        setVendorId(decodedToken.vendorId);
       }
     };
 
@@ -61,14 +63,15 @@ const ViewInventory = () => {
   const filteredProducts = products.filter((product) => {
     const isCategoryMatch =
       selectedCategory === "all" || product.categoryId === selectedCategory;
-    const isCategoryStatusMatch =
+    //const isVendorMatch =  product.vendorId === vendorId;
+    const isCategoryStatusMatch = 
       selectedCategoryStatus === "all" ||
       (selectedCategoryStatus === "active" && product.categoryStatus) ||
-      (selectedCategoryStatus === "inactive" && !product.categoryStatus);
+      (selectedCategoryStatus === "active" && !product.categoryStatus);
     const isStatusMatch =
       statusFilter === "all" ||
-      (statusFilter === "inStock" && product.stock > 0) ||
-      (statusFilter === "outOfStock" && product.stock <= 0) ||
+      (statusFilter === "inStock" && product.stockQuantity > 0) ||
+      (statusFilter === "outOfStock" && product.stockQuantity <= 0) ||
       (statusFilter === "active" && product.isActive) ||
       (statusFilter === "inactive" && !product.isActive);
 
@@ -158,8 +161,63 @@ const ViewInventory = () => {
     <div className="container">
       <h1 className="text-center mb-4">Product Inventory Management</h1>
 
+      {/* Filter Buttons for Product Status */}
+      <div className="mb-3">
+        <Button
+          variant={statusFilter === "all" ? "outline-info" : "outline-primary"}
+          onClick={() => setStatusFilter("all")}
+        >
+          All
+        </Button>
+        {/* <Button
+          variant={statusFilter === "inStock" ? "outline-info" : "outline-primary"}
+          className="ms-2"
+          onClick={() => setStatusFilter("inStock")}
+        >
+          In Stock
+        </Button>
+        <Button
+          variant={statusFilter === "outOfStock" ? "outline-info" : "outline-primary"}
+          className="ms-2"
+          onClick={() => setStatusFilter("outOfStock")}
+        >
+          Out of Stock
+        </Button> */}
+        <Button
+          variant={statusFilter === "active" ? "outline-info" : "outline-primary"}
+          className="ms-2"
+          onClick={() => setStatusFilter("active")}
+        >
+          Active
+        </Button>
+        <Button
+          variant={statusFilter === "inactive" ? "outline-info" : "outline-primary"}
+          className="ms-2"
+          onClick={() => setStatusFilter("inactive")}
+        >
+          Inactive
+        </Button>
+      </div>
+
+      {/* Filter Buttons for Stock Availability */}
+      <div className="mb-3">
+        <Button
+          variant={statusFilter === "inStock" ? "outline-info" : "outline-primary"}
+          onClick={() => setStatusFilter("inStock")}
+        >
+          Filter by In Stock
+        </Button>
+        <Button
+          variant={statusFilter === "outOfStock" ? "outline-info" : "outline-primary"}
+          className="ms-2"
+          onClick={() => setStatusFilter("outOfStock")}
+        >
+          Filter by Out of Stock
+        </Button>
+      </div>
+
       {/* Add Product Button - only for vendor */}
-      {role === "vendor" && (
+      {role === "Vendor" && (
         <div className="d-flex justify-content-end mb-3">
           <Button
             variant="outline-primary"
@@ -268,16 +326,15 @@ const ViewInventory = () => {
             </Form.Group>
             <div className="mt-3 d-flex justify-content-end">
               <Button
-                variant="secondary"
+                variant="outline-secondary"
                 onClick={() => setShowUpdateModal(false)}
               >
                 Cancel
               </Button>
               <Button
-                variant="primary"
+                variant="outline-primary"
                 type="submit"
                 className="ms-2"
-                onClick={handleUpdateStock}
               >
                 Update
               </Button>
@@ -313,16 +370,15 @@ const ViewInventory = () => {
             </Form.Group>
             <div className="mt-3 d-flex justify-content-end">
               <Button
-                variant="secondary"
+                variant="outline-secondary"
                 onClick={() => setShowRemoveModal(false)}
               >
                 Cancel
               </Button>
               <Button
-                variant="primary"
+                variant="outline-primary"
                 type="submit"
                 className="ms-2"
-                onClick={handleRemoveStock}
               >
                 Remove
               </Button>
