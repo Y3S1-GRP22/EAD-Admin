@@ -6,17 +6,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const ViewProducts = () => {
+  // State to hold all products, categories, and filter values
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const navigate = useNavigate();
 
+  // Fetch products and categories when the component mounts
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://192.168.109.81/iCorner/api/products');
-        setProducts(response.data);
+        setProducts(response.data); // Store the fetched products in state
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -25,15 +27,15 @@ const ViewProducts = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://192.168.109.81/iCorner/api/category');
-        setCategories(response.data);
+        setCategories(response.data); // Store the fetched categories in state
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
 
-    fetchProducts();
-    fetchCategories();
-  }, []);
+    fetchProducts(); // Call the function to load products
+    fetchCategories(); // Call the function to load categories
+  }, []); // Empty dependency array means it only runs once when the component mounts
 
   const filteredProducts = products.filter(product => {
     const isCategoryMatch = selectedCategory === 'all' || product.categoryId === selectedCategory;

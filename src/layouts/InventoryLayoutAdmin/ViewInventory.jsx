@@ -8,11 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const ViewInventory = () => {
+  // State to manage products and categories
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  // State to manage products and categories
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCategoryStatus, setSelectedCategoryStatus] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  // State to manage modals for updating/removing stock
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -22,6 +25,7 @@ const ViewInventory = () => {
   const [role, setRole] = useState(""); // Store role
   const navigate = useNavigate();
 
+  // Fetch products, categories, and user role on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {

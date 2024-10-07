@@ -6,30 +6,32 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
+// Component for adding a new product
 const AddProduct = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [isActive, setIsActive] = useState(true);
-  const [imageFile, setImageFile] = useState(null); // State to handle image
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  // State hooks for form fields and validations
+  const [name, setName] = useState(''); // Product name
+  const [description, setDescription] = useState(''); // Product description
+  const [price, setPrice] = useState(''); // Product price
+  const [category, setCategory] = useState(''); // Selected category
+  const [categories, setCategories] = useState([]); // List of available categories
+  const [isActive, setIsActive] = useState(true); // Status of the product (active or inactive)
+  const [imageFile, setImageFile] = useState(null); // State to handle the uploaded image file
+  const [errors, setErrors] = useState({}); // Error state for form validation
+  const navigate = useNavigate(); // To programmatically navigate between routes
 
+  // Fetch available product categories when the component mounts
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://192.168.109.81/iCorner/api/category');
-        setCategories(response.data);
+        const response = await axios.get('http://192.168.109.81/iCorner/api/category'); // Fetch categories from API
+        setCategories(response.data); // Set fetched categories to state
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error); // Log error if fetching fails
       }
     };
 
-    fetchCategories();
-  }, []);
-
+    fetchCategories(); // Call the function to fetch categories
+  }, []); // Empty dependency array ensures this runs only once
   const validateForm = () => {
     let formErrors = {};
     if (name.length < 3) {

@@ -5,18 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const AddCategory = () => {
-  const [name, setName] = useState(''); 
-  const [isActive, setIsActive] = useState(true); 
-  const navigate = useNavigate();
+  // State to hold the category name and status
+  const [name, setName] = useState(''); // State for category name
+  const [isActive, setIsActive] = useState(true); // State for category status (active/inactive)
+  const navigate = useNavigate(); // React Router's navigation hook
 
+  // Function to handle form submission
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission behavior
 
     try {
+      // Make POST request to API to add the new category
       await axios.post('http://192.168.109.81/iCorner/api/category', { name, isActive });
-      navigate('/category/view-category');
+      navigate('/category/view-category'); // Redirect to view category page after successful submission
     } catch (error) {
-      console.error('Error adding category:', error);
+      console.error('Error adding category:', error); // Log error in case of failure
     }
   };
 

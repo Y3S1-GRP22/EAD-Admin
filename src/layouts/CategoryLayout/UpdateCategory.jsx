@@ -6,25 +6,26 @@ import axios from "axios";
 import './Category.css'; // Custom CSS if needed
 
 const UpdateCategory = () => {
-  const { id } = useParams(); 
-  const [name, setName] = useState(''); 
-  const [isActive, setIsActive] = useState(true); 
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const { id } = useParams(); // Get the 'id' parameter from the URL to identify which category to update
+  const [name, setName] = useState(''); // State to store the category name
+  const [isActive, setIsActive] = useState(true); // State to store the active status of the category
+  const [errors, setErrors] = useState({}); // State to store validation errors
+  const navigate = useNavigate(); // Hook to handle redirection after update
 
+  // Fetch the category data based on the category ID when the component loads
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`http://192.168.109.81/iCorner/api/category/${id}`);
-        setName(response.data.name);
-        setIsActive(response.data.isActive);
+        const response = await axios.get(`http://192.168.109.81/iCorner/api/category/${id}`); // API call to get category by ID
+        setName(response.data.name); // Set the category name
+        setIsActive(response.data.isActive); // Set the category active status
       } catch (error) {
-        console.error('Error fetching category:', error);
+        console.error('Error fetching category:', error); // Handle error in fetching the category
       }
     };
 
-    fetchCategory();
-  }, [id]);
+    fetchCategory(); // Call the function to fetch category data
+  }, [id]); // 'id' is the dependency, so it will fetch category data every time the 'id' changes
 
   // Validation function
   const validateForm = () => {

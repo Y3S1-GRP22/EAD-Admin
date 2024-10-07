@@ -6,47 +6,51 @@ import axios from "axios";
 import "./Category.css"; // Import custom CSS file if needed
 
 const AddCategory = () => {
-  const [name, setName] = useState("");
-  const [isActive, setIsActive] = useState(true);
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    // Category Name Validation
-    if (!name) {
-      newErrors.name = "Category name is required.";
-    } else if (name.length < 3) {
-      newErrors.name = "Category name must be at least 3 characters long.";
-    } else if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
-      newErrors.name =
-        "Category name can only contain letters, numbers, and spaces.";
-    }
-
-    return newErrors;
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    try {
-      await axios.post("http://192.168.109.81/iCorner/api/category", {
-        name,
-        isActive,
-      });
-      navigate("/category/view-category");
-    } catch (error) {
-      console.error("Error adding category:", error);
-    }
-  };
-
+   // State to manage the form input values
+   const [name, setName] = useState(""); // For storing the category name
+   const [isActive, setIsActive] = useState(true); // Checkbox to manage active status
+   const [errors, setErrors] = useState({}); // To store validation errors
+ 
+   const navigate = useNavigate(); // React Router's navigation hook for redirection
+ 
+   // Function to validate the form input
+   const validateForm = () => {
+     const newErrors = {};
+ 
+     // Validate Category Name
+     if (!name) {
+       newErrors.name = "Category name is required."; // Ensure the name is not empty
+     } else if (name.length < 3) {
+       newErrors.name = "Category name must be at least 3 characters long."; // Minimum length validation
+     } else if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+       newErrors.name = "Category name can only contain letters, numbers, and spaces."; // Alphanumeric characters only
+     }
+ 
+     return newErrors; // Return any validation errors found
+   };
+ 
+   // Handle form submission
+   const handleSubmit = async (event) => {
+     event.preventDefault(); // Prevent default form submission behavior
+ 
+     const validationErrors = validateForm(); // Perform validation
+     if (Object.keys(validationErrors).length > 0) {
+       setErrors(validationErrors); // If errors, show them
+       return;
+     }
+ 
+     try {
+       // If validation passes, make a POST request to the API to add the category
+       await axios.post("http://192.168.109.81/iCorner/api/category", {
+         name, // Category name
+         isActive, // Category active status
+       });
+       navigate("/category/view-category"); // Redirect to category view page after success
+     } catch (error) {
+       console.error("Error adding category:", error); // Log error if the API call fails
+     }
+   };
+ 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="w-50">
