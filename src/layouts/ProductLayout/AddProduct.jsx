@@ -16,6 +16,7 @@ const AddProduct = () => {
   const [categories, setCategories] = useState([]); // List of available categories
   const [isActive, setIsActive] = useState(true); // Status of the product (active or inactive)
   const [imageFile, setImageFile] = useState(null); // State to handle the uploaded image file
+  const [vendorId, setVendorId] = useState(''); // vendor email
   const [errors, setErrors] = useState({}); // Error state for form validation
   const navigate = useNavigate(); // To programmatically navigate between routes
 
@@ -53,6 +54,12 @@ const AddProduct = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const token = localStorage.getItem("token"); // Get the token
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        setVendorId(decodedToken.vendorId);
+      }
+
     
     if (validateForm()) {
       try {
@@ -87,6 +94,7 @@ const AddProduct = () => {
         }
   
         await axios.put(`http://192.168.109.81/iCorner/api/products/${productId}`, {
+          vendorId: vendorId,
           name,
           description,
           price,
