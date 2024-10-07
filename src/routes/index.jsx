@@ -27,6 +27,7 @@ const FrontendRoutes = () => {
 
           <Route path="vendor" element={<VendorLayout />}>
             <Route path="dashboard" />
+            <Route path="comments" />
           </Route>
 
           <Route path="users" element={<UserManagementLayout />}>

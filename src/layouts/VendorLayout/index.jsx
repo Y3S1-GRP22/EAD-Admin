@@ -2,6 +2,7 @@ import SideNav from "../../components/SideNav";
 import Header from "../../components/Header";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Dashboard from "./Dashboard";
+import VendorComments from "./ViewComments";
 
 const VendorLayout = () => {
   return (
@@ -19,6 +20,7 @@ const VendorLayout = () => {
             <Routes>
               <Route>
                 <Route path="dashboard" element={<Dashboard />} />
+                <Route path="comments" element={<VendorComments />} />
               </Route>
             </Routes>
           </div>

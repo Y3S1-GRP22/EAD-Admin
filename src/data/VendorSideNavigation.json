@@ -17,6 +17,15 @@
             ],
             "link": "/product/view-product",
             "subMenu": []
+        },
+        {
+            "name": "View Comments",
+            "icon": [
+                "fas",
+                "book-open"
+            ],
+            "link": "/vendor/comments",
+            "subMenu": []
         }
     ]
 }
