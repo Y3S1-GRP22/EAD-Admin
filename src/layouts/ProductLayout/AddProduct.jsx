@@ -5,6 +5,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // Ensure jwt-decode is installed
+
 
 // Component for adding a new product
 const AddProduct = () => {
@@ -57,13 +59,14 @@ const AddProduct = () => {
     const token = localStorage.getItem("token"); // Get the token
       if (token) {
         const decodedToken = jwtDecode(token);
-        setVendorId(decodedToken.vendorId);
+        setVendorId(decodedToken.email);
       }
 
     
     if (validateForm()) {
       try {
         const productResponse = await axios.post('http://192.168.109.81/iCorner/api/products', {
+          vendorId: vendorId,
           name,
           description,
           price,

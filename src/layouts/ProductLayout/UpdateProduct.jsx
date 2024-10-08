@@ -5,6 +5,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // Ensure jwt-decode is installed
+
 
 const UpdateProduct = () => {
   const { id } = useParams(); // Get the product ID from the URL parameters
