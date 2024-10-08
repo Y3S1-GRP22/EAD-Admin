@@ -51,7 +51,7 @@ const ViewInventory = () => {
       if (token) {
         const decodedToken = jwtDecode(token);
         setRole(decodedToken.role); // Set the role from decoded 
-        setVendorId(decodedToken.vendorId);
+        setVendorId(decodedToken.email);
       }
     };
 
@@ -63,7 +63,7 @@ const ViewInventory = () => {
   const filteredProducts = products.filter((product) => {
     const isCategoryMatch =
       selectedCategory === "all" || product.categoryId === selectedCategory;
-    //const isVendorMatch =  product.vendorId === vendorId;
+    const isVendorMatch =  product.vendorId === vendorId;
     const isCategoryStatusMatch = 
       selectedCategoryStatus === "all" ||
       (selectedCategoryStatus === "active" && product.categoryStatus) ||
