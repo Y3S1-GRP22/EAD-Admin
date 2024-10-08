@@ -77,9 +77,9 @@ const VendorComments = () => {
             {comments.map((comment) => (
               <tr key={comment.id}>
                 <td>{comment.rating || "No rating"}</td>
-                <td>{comment.ProductId || "No product"}</td>
+                <td>{comment.productId || "No product"}</td>
                 <td>{comment.comments || "No comment"}</td>
-                <td>{comment.UserId || "No user"}</td>
+                <td>{comment.userId || "No user"}</td>
               </tr>
             ))}
           </tbody>

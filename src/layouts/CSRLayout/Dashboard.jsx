@@ -5,7 +5,7 @@ import { FaFire } from "react-icons/fa";
 
 const Dashboard = () => {
   return (
-    <div className="h-screen w-full bg-white text-black">
+    <div className="h-screen w-full bg-gray-100 text-black">
       <Board />
     </div>
   );
@@ -21,30 +21,30 @@ const Board = () => {
       </div>
       <div className="flex h-full w-full gap-3 overflow-scroll p-2">
         <Column
-          title="Backlog"
-          column="backlog"
+          title="New Tickets"
+          column="new"
           headingColor="text-neutral-800"
           cards={cards}
           setCards={setCards}
         />
         <Column
-          title="TODO"
-          column="todo"
-          headingColor="text-yellow-500"
-          cards={cards}
-          setCards={setCards}
-        />
-        <Column
-          title="In progress"
-          column="doing"
+          title="In Progress"
+          column="in_progress"
           headingColor="text-blue-500"
           cards={cards}
           setCards={setCards}
         />
         <Column
-          title="Complete"
-          column="done"
-          headingColor="text-emerald-500"
+          title="Resolved"
+          column="resolved"
+          headingColor="text-green-500"
+          cards={cards}
+          setCards={setCards}
+        />
+        <Column
+          title="Closed"
+          column="closed"
+          headingColor="text-red-500"
           cards={cards}
           setCards={setCards}
         />
@@ -54,7 +54,6 @@ const Board = () => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
 const Column = ({ title, headingColor, cards, column, setCards }) => {
   const [active, setActive] = useState(false);
 
@@ -64,24 +63,20 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
 
   const handleDragEnd = (e) => {
     const cardId = e.dataTransfer.getData("cardId");
-
     setActive(false);
     clearHighlights();
 
     const indicators = getIndicators();
     const { element } = getNearestIndicator(e, indicators);
-
     const before = element.dataset.before || "-1";
 
     if (before !== cardId) {
       let copy = [...cards];
-
       let cardToTransfer = copy.find((c) => c.id === cardId);
       if (!cardToTransfer) return;
+
       cardToTransfer = { ...cardToTransfer, column };
-
       copy = copy.filter((c) => c.id !== cardId);
-
       const moveToBack = before === "-1";
 
       if (moveToBack) {
@@ -89,7 +84,6 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
       } else {
         const insertAtIndex = copy.findIndex((el) => el.id === before);
         if (insertAtIndex === undefined) return;
-
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
 
@@ -100,13 +94,11 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
   const handleDragOver = (e) => {
     e.preventDefault();
     highlightIndicator(e);
-
     setActive(true);
   };
 
   const clearHighlights = (els) => {
     const indicators = els || getIndicators();
-
     indicators.forEach((i) => {
       i.style.opacity = "0";
     });
@@ -114,21 +106,17 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
 
   const highlightIndicator = (e) => {
     const indicators = getIndicators();
-
     clearHighlights(indicators);
-
     const el = getNearestIndicator(e, indicators);
-
     el.element.style.opacity = "1";
   };
 
   const getNearestIndicator = (e, indicators) => {
     const DISTANCE_OFFSET = 50;
 
-    const el = indicators.reduce(
+    return indicators.reduce(
       (closest, child) => {
         const box = child.getBoundingClientRect();
-
         const offset = e.clientY - (box.top + DISTANCE_OFFSET);
 
         if (offset < 0 && offset > closest.offset) {
@@ -142,8 +130,6 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
         element: indicators[indicators.length - 1],
       }
     );
-
-    return el;
   };
 
   const getIndicators = () => {
@@ -155,7 +141,6 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     setActive(false);
   };
 
-  // eslint-disable-next-line react/prop-types
   const filteredCards = cards.filter((c) => c.column === column);
 
   return (
@@ -184,7 +169,6 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
 const Card = ({ title, id, column, handleDragStart }) => {
   return (
     <>
@@ -202,7 +186,6 @@ const Card = ({ title, id, column, handleDragStart }) => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
 const DropIndicator = ({ beforeId, column }) => {
   return (
     <div
@@ -213,7 +196,6 @@ const DropIndicator = ({ beforeId, column }) => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
 const BurnBarrel = ({ setCards }) => {
   const [active, setActive] = useState(false);
 
@@ -228,9 +210,7 @@ const BurnBarrel = ({ setCards }) => {
 
   const handleDragEnd = (e) => {
     const cardId = e.dataTransfer.getData("cardId");
-
     setCards((pv) => pv.filter((c) => c.id !== cardId));
-
     setActive(false);
   };
 
@@ -250,7 +230,6 @@ const BurnBarrel = ({ setCards }) => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
 const AddCard = ({ column, setCards }) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
@@ -267,7 +246,7 @@ const AddCard = ({ column, setCards }) => {
     };
 
     setCards((pv) => [...pv, newCard]);
-
+    setText(""); // Clear the input field
     setAdding(false);
   };
 
@@ -277,6 +256,7 @@ const AddCard = ({ column, setCards }) => {
         <motion.form layout onSubmit={handleSubmit}>
           <textarea
             onChange={(e) => setText(e.target.value)}
+            value={text} // Controlled input
             autoFocus
             placeholder="Add new task..."
             className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-900 placeholder-violet-300 focus:outline-0"
@@ -301,43 +281,36 @@ const AddCard = ({ column, setCards }) => {
         <motion.button
           layout
           onClick={() => setAdding(true)}
-          className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-800 transition-colors hover:text-black"
+          className="flex w-full items-center justify-center gap-2 rounded border border-neutral-700 bg-neutral-800 p-3 text-sm text-neutral-50 transition-colors hover:bg-neutral-700"
         >
-          <span>Add card</span>
-          <FiPlus />
+          <FiPlus /> Add Task
         </motion.button>
       )}
     </>
   );
 };
 
+// Sample card data
 const DEFAULT_CARDS = [
-  // BACKLOG
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "backlog" },
-  // TODO
   {
-    title: "Research DB options for new microservice",
-    id: "5",
-    column: "todo",
+    column: "new",
+    title: "Example Ticket 1",
+    id: "1",
   },
-  { title: "Create new admin account", id: "6", column: "todo" },
-  { title: "Assign instructor roles", id: "7", column: "todo" },
-
-  // DOING
   {
-    title: "Update category descriptions",
-    id: "8",
-    column: "doing",
+    column: "new",
+    title: "Example Ticket 2",
+    id: "2",
   },
-  { title: "Approve student enrollment requests", id: "9", column: "doing" },
-  // DONE
   {
-    title: "Review category completion status",
-    id: "10",
-    column: "done",
+    column: "in_progress",
+    title: "Example Ticket 3",
+    id: "3",
+  },
+  {
+    column: "resolved",
+    title: "Example Ticket 4",
+    id: "4",
   },
 ];
 
