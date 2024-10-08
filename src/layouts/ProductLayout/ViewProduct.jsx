@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode"; // Ensure jwt-decode is installed
+
 
 const ViewProducts = () => {
   // State to hold all products, categories, and filter values
@@ -11,10 +13,21 @@ const ViewProducts = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [role, setRole] = useState(""); // Store role
+  const [vendorId, setVendorId] = useState("");
   const navigate = useNavigate();
 
   // Fetch products and categories when the component mounts
   useEffect(() => {
+    const fetchUserRole = () => {
+      const token = localStorage.getItem("token"); // Get the token
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        setRole(decodedToken.role); // Set the role from decoded 
+        setVendorId(decodedToken.email);
+      }
+    };
+
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://192.168.109.81/iCorner/api/products');
@@ -33,14 +46,16 @@ const ViewProducts = () => {
       }
     };
 
+    fetchUserRole();
     fetchProducts(); // Call the function to load products
     fetchCategories(); // Call the function to load categories
   }, []); // Empty dependency array means it only runs once when the component mounts
 
   const filteredProducts = products.filter(product => {
     const isCategoryMatch = selectedCategory === 'all' || product.categoryId === selectedCategory;
+    const isVendorMatch =  product.vendorId === vendorId;
     const isStatusMatch = statusFilter === 'all' || (statusFilter === 'active' && product.isActive) || (statusFilter === 'inactive' && !product.isActive);
-    return isCategoryMatch && isStatusMatch;
+    return isCategoryMatch && isStatusMatch  && isVendorMatch;
   });
 
   const handleEdit = (id) => {
