@@ -26,7 +26,7 @@ const VendorComments = () => {
       const fetchComments = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/comment/vendor/${decodedToken.id}`
+            `http://192.168.109.81/iCorner/api/comment/vendor/${decodedToken.id}`
           );
 
           if (!response.ok) {
