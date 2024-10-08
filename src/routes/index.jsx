@@ -29,6 +29,10 @@ const FrontendRoutes = () => {
           <Route path="vendor" element={<VendorLayout />}>
             <Route path="dashboard" />
             <Route path="comments" />
+            <Route path="orders" />
+            <Route path="orders/completed" />
+            <Route path="orders/pending" />
+            <Route path="orders/accepted" />
           </Route>
 
           <Route path="users" element={<UserManagementLayout />}>

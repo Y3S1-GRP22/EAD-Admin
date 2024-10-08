@@ -3,6 +3,11 @@ import Header from "../../components/Header";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import VendorComments from "./ViewComments";
+import ViewAllOrders from "./ViewAllOrders";
+import CompletedOrders from "./CompletedOrders";
+import PendingOrders from "./PendingOrders";
+import AcceptedOrders from "./AcceptedOrders";
+import './order.css'
 
 const VendorLayout = () => {
   return (
@@ -21,6 +26,10 @@ const VendorLayout = () => {
               <Route>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="comments" element={<VendorComments />} />
+                <Route path="orders" element={<ViewAllOrders />} />
+                <Route path="orders/completed" element={<CompletedOrders />} />
+                <Route path="orders/pending" element={<PendingOrders />} />
+                <Route path="orders/accepted" element={<AcceptedOrders />} />
               </Route>
             </Routes>
           </div>
